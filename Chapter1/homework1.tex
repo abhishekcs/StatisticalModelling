@@ -248,7 +248,8 @@
     \]
     
  1 follows from linearity of expectation and distributive property of matrix multiplication. 2 follows from the fact that $A$ and $\mu$ being constants can be pushed out of the expectation. 3 follows from the definition of $\mu$
-    
+ 
+ \par
 \textbf{Part D}\\
 Let us try to find the moment generating function for the random variable z.
         \[
@@ -271,6 +272,11 @@ Let us try to find the moment generating function for the random variable z.
         \end{split}
     \]
 Now using the if part of the result in part C, we can easily see that $x \sim N(u, LL^T)$
+\par
+\par
+
+\textbf{Part E} \\
+Suppose $x \sim N(\mu, \Sigma)$. We know that the matrix $\Sigma$ is symmetric since for any $i,j$ we have that $cov(x_i, x_j) = cov(x_j, x_i)$. From the spectral theorem, there exists an orthonormal matrix $U$ and a diagonal matrix $D$ such that $\Sigma = UDU^T$. We can rewrite this decomposition as $\Sigma = UD^{\frac{1}{2}}(UD^{\frac{1}{2}} )^T$ where $D^{\frac{1}{2}}$ is the matrix obtained by taking the square roots of the the diagonal entries of $D$.
 \end{homeworkProblem}
 
 \begin{homeworkProblem}

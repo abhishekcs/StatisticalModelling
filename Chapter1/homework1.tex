@@ -211,74 +211,66 @@
 \pagebreak
 
 \begin{homeworkProblem}
-    Let \(\Sigma = \{0, 1\}\). Construct a DFA \(A\) that recognizes the
-    language that consists of all binary numbers that can be divided by 5.
-    \\
-
-    Let the state \(q_k\) indicate the remainder of \(k\) divided by 5. For
-    example, the remainder of 2 would correlate to state \(q_2\) because \(7
-    \mod 5 = 2\).
-
-%    \begin{figure}[here]
-%        \centering
-%        \begin{tikzpicture}[shorten >=1pt,node distance=2cm,on grid,auto]
-%            \node[state, accepting, initial] (q_0)   {$q_0$};
-%            \node[state] (q_1) [right=of q_0] {$q_1$};
-%            \node[state] (q_2) [right=of q_1] {$q_2$};
-%            \node[state] (q_3) [right=of q_2] {$q_3$};
-%            \node[state] (q_4) [right=of q_3] {$q_4$};
-%            \path[->]
-%                (q_0)
-%                    edge [loop above] node {0} (q_0)
-%                    edge node {1} (q_1)
-%                (q_1)
-%                    edge node {0} (q_2)
-%                    edge [bend right=-30] node {1} (q_3)
-%                (q_2)
-%                    edge [bend left] node {1} (q_0)
-%                    edge [bend right=-30] node {0} (q_4)
-%                (q_3)
-%                    edge node {1} (q_2)
-%                    edge [bend left] node {0} (q_1)
-%                (q_4)
-%                    edge node {0} (q_3)
-%                    edge [loop below] node {1} (q_4);
-%        \end{tikzpicture}
-%        \caption{DFA, \(A\), this is really beautiful, ya know?}
-%        \label{fig:multiple5}
-%    \end{figure}
-
-    \textbf{Justification}
-    \\
-
-    Take a given binary number, \(x\). Since there are only two inputs to our
-    state machine, \(x\) can either become \(x0\) or \(x1\). When a 0 comes
-    into the state machine, it is the same as taking the binary number and
-    multiplying it by two. When a 1 comes into the machine, it is the same as
-    multipying by two and adding one.
-    \\
-
-    Using this knowledge, we can construct a transition table that tell us
-    where to go:
-
-    \begin{table}[ht]
-        \centering
-        \begin{tabular}{c || c | c | c | c | c}
-            & \(x \mod 5 = 0\)
-            & \(x \mod 5 = 1\)
-            & \(x \mod 5 = 2\)
-            & \(x \mod 5 = 3\)
-            & \(x \mod 5 = 4\)
+\textbf{Part A} \\
+    \[
+        \begin{split}
+            cov(x) &= E\{(x-\mu)(x-\mu)^T\}
             \\
-            \hline
-            \(x0\) & 0 & 2 & 4 & 1 & 3 \\
-            \(x1\) & 1 & 3 & 0 & 2 & 4 \\
-        \end{tabular}
-    \end{table}
-
-%Therefore on state \(q_0\) or (\(x \mod 5 = 0\)), a transition line should
-%go to state \(q_0\) for the input 0 and a line should go to state \(q_1\)
-%for input 1. Continuing this gives us the Figure~\ref{fig:multiple5}.
+            &= E\{(x-\mu)(x^T-\mu^T)\} , \textrm{using property of transpose}
+            \\
+            &= E\{xx^T - x\mu^T - \mu x^T + \mu\mu^T\} , \textrm{using distributive property of matrix multiplication}
+            \\
+            &= E(xx^T )- E(x\mu^T )- E(\mu x^T) + E(\mu\mu^T), \textrm{using Linearity of Expectation }
+            \\
+            &= E(xx^T) - E(x)\mu^T - \mu E(x^T) + \mu\mu^T, \textrm{$\mu$ being a constant can be pushed out of the expectation}
+            \\
+            &= E(xx^T) - \mu\mu^T - \mu\mu^T + \mu\mu^T
+            \\
+            &= E(xx^T) - \mu\mu^T
+        \end{split}
+    \]
+    
+        \[
+        \begin{split}
+            cov(Ax + b) &= E\{(Ax+b)(Ax + b)^T\} - E(Ax+b)E(Ax+b)^T, \textrm{using previous result}
+            \\
+            &= E\{(Ax+b)(x^TA^T + b^T)\} - \{E(Ax) + b\}\{E(Ax)+b\}^T, \textrm{using property of transpose}
+            \\
+            &\stackrel{1}{=} E(Axx^TA^T) + E(Axb^T) + E(bx^TA^T) + E(bb^T) - (A\mu + b)(A\mu + b)^T
+            \\
+           &\stackrel{2}{=} AE(xx^T)A^T + AE(x)b^T + bE(x^T)A^T + bb^T - (A\mu+b)(\mu^TA^T + b^T)
+           \\
+            &\stackrel{3}{=} AE(xx^T)A^T + A\mu b^T + b \mu^TA^T + bb^T - A\mu\mu^TA^T - A\mu b^T - b\mu^TA^T - bb^T            	    \\
+            &= AE(xx^T)A^T - A\mu\mu^TA^T
+            \\
+            &=  Acov(x)A^T, \textrm{using previous result}
+        \end{split}
+    \]
+    
+ 1 follows from linearity of expectation and distributive property of matrix multiplication. 2 follows from the fact that $A$ and $\mu$ being constants can be pushed out of the expectation. 3 follows from the definition of $\mu$
+    
+\textbf{Part D}\\
+Let us try to find the moment generating function for the random variable z.
+        \[
+        \begin{split}
+            {MGF}_{x}(t) &= E\{\exp(t^Tx)\}, \textrm{using definition of MGF}
+            \\
+            &= E\{\exp(t^T(Lz + \mu))\}, \textrm{substituting for $x$ in terms of $z$}
+            \\
+            &= E\{\exp(t^TLz)\} E\{\exp(t^T\mu)\}, \textrm{distributing the powers}
+            \\
+            &= E\{\exp(t^TLz)\} \exp(t^T\mu), \textrm{$t^T\mu$ is constant for a given $t$}
+            \\
+            &= E\{\exp((L^Tt)^Tz)\} \exp(t^T\mu), \textrm{using basic property of transpose}
+            \\
+            &= \exp( (L^Tt)^TI(L^Tt)) \exp(t^T \mu), \textrm{using MGF for standard multivariate normal}
+            \\
+            &= \exp(t^TLL^Tt)\exp(t^T\mu)
+            \\
+            &= \exp(t^T\mu + t^T(LL^T)t), \textrm{combining the powers}
+        \end{split}
+    \]
+Now using the if part of the result in part C, we can easily see that $x \sim N(u, LL^T)$
 \end{homeworkProblem}
 
 \begin{homeworkProblem}
